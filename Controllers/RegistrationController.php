@@ -23,8 +23,8 @@ class RegistrationController extends FrontendController
         $this->addBreadcrumb(UserModule::t("Registration"));
 
         $form = new RegistrationForm();
-        if ($this->r->isPost && $form->populate($_POST)->isValid() && $form->save()) {
-            $this->r->redirect('user:registration_success');
+        if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->save()) {
+            $this->request->redirect('user:registration_success');
         }
 
         echo $this->render('user/registration.html', [
@@ -45,7 +45,7 @@ class RegistrationController extends FrontendController
         }
 
         if ($model->is_active) {
-            $this->r->redirect('user:login');
+            $this->request->redirect('user:login');
         }
 
         if ($model->activation_key === $key) {

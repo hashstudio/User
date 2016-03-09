@@ -26,7 +26,7 @@ class GroupPermission extends Model
     public static function getFields()
     {
         return [
-            'user_group' => [
+            'group' => [
                 'class' => ForeignField::className(),
                 'modelClass' => Group::className(),
                 'verboseName' => UserModule::t("Group"),

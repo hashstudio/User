@@ -25,7 +25,7 @@ class UserController extends FrontendController
         $user = Mindy::app()->getUser();
 
         if ($user->isGuest) {
-            $this->r->redirect(Mindy::app()->getModule('user')->getLoginUrl());
+            $this->request->redirect(Mindy::app()->getModule('user')->getLoginUrl());
         }
 
         if ($action->getId() == 'list' && $this->getModule()->userList === false && !$user->is_superuser) {
@@ -43,7 +43,7 @@ class UserController extends FrontendController
         }
 
         if ($model->username == Mindy::app()->user->username) {
-            $this->r->redirect('user:profile');
+            $this->request->redirect('user:profile');
         }
 
         if ($this->getModule()->userList) {
@@ -98,9 +98,9 @@ class UserController extends FrontendController
             'model' => $model
         ]);
 
-        if ($this->r->isPost && $form->populate($_POST)->isValid() && $form->save()) {
-            $this->r->flash->success(UserModule::t('Password changed'));
-            $this->r->redirect('user:login');
+        if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->save()) {
+            $this->request->flash->success(UserModule::t('Password changed'));
+            $this->request->redirect('user:login');
         }
 
         echo $this->render('user/change_password.html', [

@@ -20,13 +20,13 @@ class RecoverController extends FrontendController
         $this->addBreadcrumb(UserModule::t("Recover password"));
 
         $form = new RecoverForm();
-        if ($this->r->isPost) {
+        if ($this->request->isPost) {
             if ($form->populate($_POST)->isValid() && $form->send()) {
-                $this->r->flash->success(UserModule::t("Message was sended to your email"));
+                $this->request->flash->success(UserModule::t("Message was sended to your email"));
                 echo $this->render('user/recover_form_success.html');
                 Mindy::app()->end();
             } else {
-                $this->r->flash->error(UserModule::t("An error has occurred. Please try again later."));
+                $this->request->flash->error(UserModule::t("An error has occurred. Please try again later."));
             }
         }
         echo $this->render('user/recover_form.html', [
@@ -45,9 +45,9 @@ class RecoverController extends FrontendController
             $form = new ChangePasswordForm([
                 'model' => $model
             ]);
-            if ($this->r->isPost && $form->populate($_POST)->isValid() && $form->save()) {
-                $this->r->flash->success(UserModule::t('Password changed'));
-                $this->r->redirect('user:login');
+            if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->save()) {
+                $this->request->flash->success(UserModule::t('Password changed'));
+                $this->request->redirect('user:login');
             } else {
                 echo $this->render('user/recover_change_password.html', [
                     'form' => $form,
