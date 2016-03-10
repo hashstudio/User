@@ -150,4 +150,13 @@ return array(
     'Create user' => 'Создать пользователя',
     'Update user' => 'Редактирование пользователя',
     'Update user: {name}' => 'Редактирование пользователя: {name}',
+    'User settings' => 'Настройки пользователей',
+    'Registration enabled' => 'Регистрация возможна',
+    'Activation is needed' => 'Необходима принудительная активация аккаунта',
+    'Recover password enabled' => 'Возможность восстановить пароль',
+    'User object' => 'Объект пользователя',
+    'Recovering password' => 'Восстановление пароля',
+    'Successful registration' => 'Вы успешно зарегистрировались на сайте',
+    'Activation failed!' => 'При попытке активировать аккаунт возникли проблемы',
+    'User {name} logged in' => 'Пользователь {name} вошел в систему'
 );

@@ -74,12 +74,7 @@ class UserManager extends Manager
                 $model->permissions->link($perm);
             }
             $eventManager = $this->getEventManager();
-            $module = Mindy::app()->getModule('User');
-            if ($module->sendUserCreateMail) {
-                $eventManager->send($model, 'createUser', $model);
-            } else if ($module->sendUserCreateRawMail) {
-                $eventManager->send($model, 'createRawUser', $model, $password);
-            }
+            $eventManager->send($model, 'createUser', $model);
         }
 
         return $model;

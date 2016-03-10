@@ -1,12 +1,16 @@
 {% extends "user/base.html" %}
 
-{% block content %}
+{% block heading %}
     <h1>{{ t('Registration', 'user') }}</h1>
+{% endblock %}
 
-    <form action="{% url 'user:registration' %}" method="post">
-        {% csrf_token %}
-        {{ form|safe }}
-        <br/>
-        <input type="submit" class="button" value="{{ t('Registration', 'user') }}"/>
-    </form>
+{% block content %}
+    <div class="registration-form">
+        <form action="{% url 'user:registration' %}" method="post">
+            {% csrf_token %}
+            {{ form|safe }}
+            <br/>
+            <button class="button" type="submit">{{ t('Registration', 'user') }}</button>
+        </form>
+    </div>
 {% endblock %}

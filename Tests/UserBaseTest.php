@@ -35,7 +35,6 @@ abstract class UserBaseTest extends DatabaseTestCase
             new UserPermission,
             new GroupPermission,
             new Key,
-            new Profile,
             new Session
         ];
     }

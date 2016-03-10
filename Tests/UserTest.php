@@ -34,7 +34,6 @@ class UserTest extends UserBaseTest
             new UserPermission,
             new GroupPermission,
             new Key,
-            new Profile,
             new Session
         ];
     }

@@ -3,9 +3,10 @@
 namespace Modules\User\Controllers;
 
 use Mindy\Base\Mindy;
+use Modules\Core\Components\ParamsHelper;
 use Modules\Core\Controllers\FrontendController;
-use Modules\User\Forms\ChangePasswordForm;
 use Modules\User\Forms\RecoverForm;
+use Modules\User\Forms\RecoverPasswordForm;
 use Modules\User\Models\User;
 use Modules\User\UserModule;
 
@@ -17,6 +18,11 @@ class RecoverController extends FrontendController
 {
     public function actionIndex()
     {
+        $enabled = ParamsHelper::get('user.user.recover');
+        if (!$enabled) {
+            $this->error(404);
+        }
+
         $this->addBreadcrumb(UserModule::t("Recover password"));
 
         $form = new RecoverForm();
@@ -42,7 +48,7 @@ class RecoverController extends FrontendController
         }
 
         if ($model->activation_key === $key) {
-            $form = new ChangePasswordForm([
+            $form = new RecoverPasswordForm([
                 'model' => $model
             ]);
             if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->save()) {

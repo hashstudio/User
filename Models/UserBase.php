@@ -110,15 +110,6 @@ abstract class UserBase extends Model
         return (string)$this->username;
     }
 
-    public function notifyRegistration()
-    {
-        return Mindy::app()->mail->send('user.registration', $this->email, [
-            'username' => $this->username,
-            'sitename' => Params::get('core.sitename'),
-            'activation_url' => Mindy::app()->urlManager->reverse('user:registration_activation', ['key' => $this->activation_key]),
-        ]);
-    }
-
     public function getPermissionList()
     {
         return Mindy::app()->authManager->getPermIdArray();

@@ -6,6 +6,7 @@ use Mindy\Base\Mindy;
 use Mindy\Form\Fields\CharField;
 use Mindy\Form\Form;
 use Mindy\Helper\Params;
+use Mindy\Utils\RenderTrait;
 use Modules\User\Models\User;
 use Modules\User\UserModule;
 
@@ -49,12 +50,18 @@ class RecoverForm extends Form
             $recoverUrl = $app->urlManager->reverse('user:recover_activate', [
                 'key' => $this->_model->activation_key
             ]);
-            return $app->mail->fromCode('user.recover', $this->_model->email, [
-                'data' => $this->_model,
+
+            $data = [
+                'current_user' => $this->_model,
                 'username' => $this->_model->username,
                 'site' => $app->getModule('Sites')->getSite(),
                 'activation_url' => $app->request->http->absoluteUrl($recoverUrl),
-            ]);
+            ];
+
+            $subject = UserModule::t('Recovering password');
+            $message = $app->template->render('user/mail/recover.html', $data);
+
+            return $app->mail->fromCodeOrRaw('user.recover', $subject, $message, $this->_model->email, $data);
         }
 
         return false;

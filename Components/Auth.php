@@ -247,8 +247,7 @@ class Auth
         $this->setModel($model);
         $this->getEventManager()->send($this, 'onAuth', $model);
 
-        $this->recordAction(UserModule::t('User <a href="{url}">{name}</a> logged in', [
-            '{url}' => $model->getAbsoluteUrl(),
+        $this->recordAction(UserModule::t('User {name} logged in', [
             '{name}' => (string)$model
         ]), $model->getModuleName());
 

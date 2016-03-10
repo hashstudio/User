@@ -1,18 +1,24 @@
 {% extends request.isAjax ? 'ajax.html' : 'user/base.html' %}
 
+{% block heading %}
+    <h1>{{ t('Login', 'user') }}</h1>
+{% endblock %}
+
 {% block content %}
     <div class="login-form">
-        <h1>{{ t('Login', 'user') }}</h1>
-
         <form action="{% url 'user:login' %}" method="post">
             {% csrf_token %}
             {{ form|safe }}
             <p class="right">
-                <a class="link" href="{% url 'user:registration' %}">{{ t('Registration', 'user') }}</a>
-                <a class="link" href="{% url 'user:recover' %}">{{ t('Lost password?', 'user') }}</a>
+                {% if param('user.user.registration') %}
+                    <a class="link" href="{% url 'user:registration' %}">{{ t('Registration', 'user') }}</a>
+                {% endif %}
+                {% if param('user.user.recover') %}
+                    <a class="link" href="{% url 'user:recover' %}">{{ t('Lost password?', 'user') }}</a>
+                {% endif %}
             </p>
             <br/>
-            <input type="submit" class="button" value="{{ t('Login', 'user') }}"/>
+            <button class="button" type="submit">{{ t('Login', 'user') }}</button>
         </form>
     </div>
 {% endblock %}

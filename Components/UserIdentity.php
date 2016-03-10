@@ -5,6 +5,7 @@ namespace Modules\User\Components;
 use Mindy\Base\Mindy;
 use Mindy\Helper\Password;
 use Mindy\Orm\Model;
+use Modules\Core\Components\ParamsHelper;
 use Modules\User\Models\User;
 
 /**
@@ -55,6 +56,7 @@ class UserIdentity extends BaseUserIdentity
      */
     public function authenticate()
     {
+        $activation = ParamsHelper::get('user.user.activation');
         /** @var \Modules\User\Components\Auth $auth */
         $auth = Mindy::app()->auth;
         if (strpos($this->username, "@")) {
@@ -73,7 +75,7 @@ class UserIdentity extends BaseUserIdentity
             } else {
                 $this->errorCode = self::ERROR_USERNAME_INVALID;
             }
-        } else if (!$model->is_active) {
+        } else if ($activation && !$model->is_active) {
             $this->errorCode = self::ERROR_INACTIVE;
         } else if (!$auth->getPasswordHasher($model->hash_type)->verifyPassword($this->password, $model->password)) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;

@@ -17,7 +17,7 @@ class UserController extends FrontendController
 {
     public function allowedActions()
     {
-        return ['index', 'view'];
+        return ['view'];
     }
 
     public function beforeAction($owner, $action)
@@ -35,63 +35,9 @@ class UserController extends FrontendController
         return true;
     }
 
-    public function actionView($username)
-    {
-        $model = User::objects()->filter(['username' => $username])->get();
-        if ($model === null) {
-            $this->error(404);
-        }
-
-        if ($model->username == Mindy::app()->user->username) {
-            $this->request->redirect('user:profile');
-        }
-
-        if ($this->getModule()->userList) {
-            $this->addBreadcrumb(UserModule::t("Users"), Mindy::app()->urlManager->reverse('user:list'));
-        }
-        $this->addBreadcrumb($model);
-
-        echo $this->render('user/view.html', [
-            'model' => $model
-        ]);
-    }
-
-    public function actionIndex()
-    {
-        if ($this->getModule()->userList) {
-            $this->addBreadcrumb(UserModule::t("Users"), Mindy::app()->urlManager->reverse('user:list'));
-        }
-
-        $qs = User::objects()->active();
-        $pager = new Pagination($qs);
-        echo $this->render('user/list.html', [
-            'pager' => $pager,
-            'models' => $pager->paginate()
-        ]);
-    }
-
-    public function actionProfile()
-    {
-        $model = Mindy::app()->user;
-
-        if ($this->getModule()->userList) {
-            $this->addBreadcrumb(UserModule::t("Users"), Mindy::app()->urlManager->reverse('user:list'));
-        }
-        $this->addBreadcrumb($model);
-
-        echo $this->render('user/profile.html', [
-            'model' => $model,
-        ]);
-    }
-
     public function actionChangepassword()
     {
         $model = Mindy::app()->user;
-
-        if ($this->getModule()->userList) {
-            $this->addBreadcrumb(UserModule::t("Users"), Mindy::app()->urlManager->reverse('user:list'));
-        }
-        $this->addBreadcrumb($model, $model->getAbsoluteUrl());
         $this->addBreadcrumb(UserModule::t("Change password"));
 
         $form = new ChangePasswordForm([

@@ -2,6 +2,8 @@
 
 namespace Modules\User\Controllers;
 
+use Mindy\Base\Mindy;
+use Modules\Core\Components\ParamsHelper;
 use Modules\Core\Controllers\FrontendController;
 use Modules\User\Forms\RegistrationForm;
 use Modules\User\Models\User;
@@ -20,11 +22,17 @@ class RegistrationController extends FrontendController
 
     public function actionIndex()
     {
+        $enabled = ParamsHelper::get('user.user.registration');
+        if (!$enabled) {
+            $this->error(404);
+        }
+
         $this->addBreadcrumb(UserModule::t("Registration"));
 
         $form = new RegistrationForm();
         if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->save()) {
-            $this->request->redirect('user:registration_success');
+            $module = Mindy::app()->getModule('User');
+            $this->request->redirect($module->registrationRedirectUrl);
         }
 
         echo $this->render('user/registration.html', [

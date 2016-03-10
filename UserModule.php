@@ -5,7 +5,9 @@ namespace Modules\User;
 use Mindy\Base\Mindy;
 use Mindy\Base\Module;
 use Mindy\Helper\Console;
+use Mindy\Helper\Params;
 use Modules\Core\CoreModule;
+use Modules\User\Helpers\UserHelper;
 
 /**
  * Class UserModule
@@ -14,21 +16,21 @@ use Modules\Core\CoreModule;
 class UserModule extends Module
 {
     /**
-     * @var array
-     */
-    public $config = [];
-    /**
      * @var int Remember Me Time (seconds), defalt = 2592000 (30 days)
      */
     public $rememberMeTime = 2592000; // 30 days
     /**
-     * @var string the name of the user model class.
-     */
-    public $userClass = 'User';
-    /**
      * @var string
      */
     public $loginUrl = 'user:login';
+    /**
+     * @var string
+     */
+    public $loginRedirectUrl = '/';
+    /**
+     * @var string
+     */
+    public $registrationRedirectUrl = 'user:registration_success';
     /**
      * @var int 3600 * 24 * $days
      */
@@ -36,15 +38,7 @@ class UserModule extends Module
     /**
      * @var bool
      */
-    public $userList = true;
-    /**
-     * @var bool
-     */
     public $sendUserCreateMail = true;
-    /**
-     * @var bool
-     */
-    public $sendUserCreateRawMail = false;
     /**
      * @var bool
      */
@@ -67,6 +61,7 @@ class UserModule extends Module
     public static function preConfigure()
     {
         $app = Mindy::app();
+
         $tpl = $app->template;
         $tpl->addHelper('gravatar', function ($user, $size = 80) {
             $email = $user->email;
@@ -76,23 +71,21 @@ class UserModule extends Module
         $tpl->addHelper('login_form', ['\Modules\User\Helpers\UserHelper', 'render']);
 
         $signal = $app->signal;
+
         $signal->handler('\Modules\User\Models\UserBase', 'createUser', function ($user) use ($app) {
-            if (!$user->is_active) {
-                $app->mail->fromCode('user.registration', $user->email, [
-                    'data' => $user,
-                    'site' => $app->getModule('Sites')->getSite(),
-                    'activation_link' => $app->request->http->absoluteUrl($app->urlManager->reverse('user:registration_activation', [
+            $module = $app->getModule('User');
+            if ($module->sendUserCreateMail) {
+                $data = [
+                    'current_user' => $user,
+                    'sitename' => Params::get('core.core.sitename'),
+                    'activation_url' => $app->request->http->absoluteUrl($app->urlManager->reverse('user:registration_activation', [
                         'key' => $user->activation_key
                     ]))
-                ]);
-            }
-        });
-        $signal->handler('\Modules\User\Models\UserBase', 'createRawUser', function ($user, $password) {
-            if (!Console::isCli() && $user->email && !$user->is_active) {
-                Mindy::app()->mail->fromCode('user.create_raw_user', $user->email, [
-                    'data' => $user,
-                    'password' => $password
-                ]);
+                ];
+                $subject = $module::t('Successful registration');
+                $message = UserHelper::renderTemplate('user/mail/registration.html', $data);
+
+                $app->mail->fromCodeOrRaw('user.registration', $subject, $message, $user->email, $data);
             }
         });
     }
@@ -136,7 +129,7 @@ class UserModule extends Module
     {
         return [
             'registration' => [
-                'username' => UserModule::t('Username'),
+                'user' => UserModule::t('User object'),
                 'activation_url' => UserModule::t('Url with activation key'),
                 'sitename' => CoreModule::t('Site name')
             ],

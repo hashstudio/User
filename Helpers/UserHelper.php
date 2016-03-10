@@ -14,12 +14,14 @@
 
 namespace Modules\User\Helpers;
 
+use Mindy\Helper\Traits\Accessors;
+use Mindy\Helper\Traits\Configurator;
 use Mindy\Utils\RenderTrait;
 use Modules\User\Forms\LoginForm;
 
 class UserHelper
 {
-    use RenderTrait;
+    use RenderTrait, Configurator;
 
     public static function render($request, $template = "user/_login.html")
     {

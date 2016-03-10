@@ -1,21 +1,13 @@
 <?php
 
 return [
-    '/' => [
-        'name' => 'list',
-        'callback' => '\Modules\User\Controllers\UserController:index'
-    ],
-    '/recover/' => [
+    '/recover' => [
         'name'     => 'recover',
         'callback' => '\Modules\User\Controllers\RecoverController:index'
     ],
     '/recover/{key}' => [
         'name'     => 'recover_activate',
         'callback' => '\Modules\User\Controllers\RecoverController:activate'
-    ],
-    '/profile' => [
-        'name'     => 'profile',
-        'callback' => '\Modules\User\Controllers\UserController:profile',
     ],
     '/password' => [
         'name'     => 'change_password',
@@ -40,9 +32,5 @@ return [
     '/login' => [
         'name'     => 'login',
         'callback' => '\Modules\User\Controllers\AuthController:login'
-    ],
-    '/{username:\w+}' => [
-        'name'   => 'view',
-        'callback' => '\Modules\User\Controllers\UserController:view'
-    ],
+    ]
 ];
